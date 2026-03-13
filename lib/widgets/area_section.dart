@@ -143,18 +143,29 @@ class _ProfessorRow extends StatelessWidget {
                     child: temApoio
                         ? Center(
                             child: Tooltip(
-                              message: apoiosDoDia.map((a) => a.gestorNome).join(', '),
+                              message: apoiosDoDia.map((a) {
+                                final t = a.turma != null ? ' [${a.turma}]' : '';
+                                return '${a.gestorNome}$t';
+                              }).join(', '),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Icon(Icons.check_circle, color: Colors.white, size: 14),
-                                  if (apoiosDoDia.length == 1)
+                                  const Icon(Icons.check_circle, color: Colors.white, size: 12),
+                                  if (apoiosDoDia.length == 1) ...[
                                     Text(
                                       _abreviaNome(apoiosDoDia.first.gestorNome),
-                                      style: const TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold),
+                                      style: const TextStyle(color: Colors.white, fontSize: 7, fontWeight: FontWeight.bold),
                                       textAlign: TextAlign.center,
                                       overflow: TextOverflow.ellipsis,
                                     ),
+                                    if (apoiosDoDia.first.turma != null)
+                                      Text(
+                                        apoiosDoDia.first.turma!,
+                                        style: const TextStyle(color: Colors.white70, fontSize: 7),
+                                        textAlign: TextAlign.center,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                  ],
                                   if (apoiosDoDia.length > 1)
                                     Text(
                                       '${apoiosDoDia.length}x',
@@ -220,7 +231,11 @@ class _ProfessorRow extends StatelessWidget {
                     ),
                   ),
                   title: Text(apoio.gestorNome),
-                  subtitle: Text('${apoio.diaSemana} · $area'),
+                  subtitle: Text(
+                    apoio.turma != null
+                        ? '${apoio.diaSemana} · $area · Turma ${apoio.turma}'
+                        : '${apoio.diaSemana} · $area',
+                  ),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete_outline, color: Colors.red),
                     onPressed: () {

@@ -26,6 +26,7 @@ class _RegistrarApoioSheetState extends State<RegistrarApoioSheet> {
   String? _areaSelecionada;
   String? _professorSelecionado;
   String? _gestorSelecionado;
+  String? _turmaSelecionada;
   late String _diaSelecionado;
   bool _salvando = false;
 
@@ -43,9 +44,10 @@ class _RegistrarApoioSheetState extends State<RegistrarApoioSheet> {
   }
 
   Future<void> _registrar() async {
-    if (_professorSelecionado == null || _gestorSelecionado == null || _areaSelecionada == null) {
+    if (_professorSelecionado == null || _gestorSelecionado == null ||
+        _areaSelecionada == null || _turmaSelecionada == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Preencha todos os campos'), backgroundColor: Colors.red),
+        const SnackBar(content: Text('Preencha todos os campos, incluindo a turma'), backgroundColor: Colors.red),
       );
       return;
     }
@@ -65,6 +67,7 @@ class _RegistrarApoioSheetState extends State<RegistrarApoioSheet> {
       gestorNome: _gestorSelecionado!,
       diaSemana: _diaSelecionado,
       dataHora: dataApoio,
+      turma: _turmaSelecionada!,
     );
 
     if (mounted) {
@@ -202,6 +205,44 @@ class _RegistrarApoioSheetState extends State<RegistrarApoioSheet> {
               ),
               items: _professoresDaArea.map((p) => DropdownMenuItem(value: p, child: Text(p))).toList(),
               onChanged: _areaSelecionada == null ? null : (v) => setState(() => _professorSelecionado = v),
+            ),
+            const SizedBox(height: 14),
+
+            // Turma
+            const Text('Turma', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12, color: Colors.grey)),
+            const SizedBox(height: 6),
+            DropdownButtonFormField<String>(
+              initialValue: _turmaSelecionada,
+              hint: const Text('Selecione a turma'),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                filled: true,
+                fillColor: Colors.grey[50],
+              ),
+              items: kTurmas.map((t) => DropdownMenuItem(
+                value: t,
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: AppTheme.primary.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        t,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.primary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )).toList(),
+              onChanged: (v) => setState(() => _turmaSelecionada = v),
             ),
             const SizedBox(height: 14),
 

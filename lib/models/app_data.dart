@@ -18,6 +18,7 @@ class Apoio {
   final String gestorNome;
   final DateTime dataHora;
   final String diaSemana; // 'SEG', 'TER', 'QUA', 'QUI', 'SEX'
+  final String? turma;   // ex: '6A', '2ADM', etc.
 
   Apoio({
     required this.id,
@@ -26,6 +27,7 @@ class Apoio {
     required this.gestorNome,
     required this.dataHora,
     required this.diaSemana,
+    this.turma,
   });
 
   Map<String, dynamic> toMap() {
@@ -36,6 +38,7 @@ class Apoio {
       'gestorNome': gestorNome,
       'dataHora': dataHora.toIso8601String(),
       'diaSemana': diaSemana,
+      'turma': turma,
     };
   }
 
@@ -47,12 +50,13 @@ class Apoio {
       gestorNome: map['gestorNome'],
       dataHora: DateTime.parse(map['dataHora']),
       diaSemana: map['diaSemana'],
+      turma: map['turma'] as String?,
     );
   }
 
   // ── Supabase (snake_case) ──
   Map<String, dynamic> toSupabase() {
-    return {
+    final m = <String, dynamic>{
       'id': id,
       'professor_nome': professorNome,
       'professor_area': professorArea,
@@ -60,6 +64,8 @@ class Apoio {
       'data_hora': dataHora.toUtc().toIso8601String(),
       'dia_semana': diaSemana,
     };
+    if (turma != null) m['turma'] = turma;
+    return m;
   }
 
   factory Apoio.fromSupabase(Map<String, dynamic> map) {
@@ -70,6 +76,7 @@ class Apoio {
       gestorNome: map['gestor_nome'] as String,
       dataHora: DateTime.parse(map['data_hora'] as String).toLocal(),
       diaSemana: map['dia_semana'] as String,
+      turma: map['turma'] as String?,
     );
   }
 }
@@ -149,3 +156,17 @@ const Map<String, int> kAreaColor = {
 };
 
 const int kMetaSemanal = 15;
+
+// Turmas da escola
+const List<String> kTurmas = [
+  // Ensino Fundamental
+  '6A', '6B', '6C',
+  '7A', '7B', '7C',
+  '8A', '8B', '8C',
+  '9A', '9B', '9C',
+  // Ensino Médio
+  '1A', '1B', '1C', '1D',
+  // Ensino Técnico
+  '2ADM', '2ENF', '2C',
+  '3A', '3ADM', '3B',
+];

@@ -137,6 +137,7 @@ class ApoioProvider extends ChangeNotifier {
     required String professorArea,
     required String gestorNome,
     required String diaSemana,
+    required String turma,
     DateTime? dataHora,
   }) async {
     final id = _uuid.v4();
@@ -149,6 +150,7 @@ class ApoioProvider extends ChangeNotifier {
       gestorNome: gestorNome,
       dataHora: dataFinal,
       diaSemana: diaSemana,
+      turma: turma,
     );
 
     // Otimista: adiciona localmente antes de confirmar

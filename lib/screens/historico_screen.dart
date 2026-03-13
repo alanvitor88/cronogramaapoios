@@ -214,6 +214,32 @@ class _ApoioCard extends StatelessWidget {
                 Icon(Icons.access_time, size: 11, color: Colors.grey[500]),
                 const SizedBox(width: 3),
                 Text(fmt.format(apoio.dataHora), style: TextStyle(fontSize: 11, color: Colors.grey[500])),
+                if (apoio.turma != null) ...[
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                    decoration: BoxDecoration(
+                      color: Colors.indigo.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: Colors.indigo.withValues(alpha: 0.3)),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.class_, size: 10, color: Colors.indigo),
+                        const SizedBox(width: 3),
+                        Text(
+                          apoio.turma!,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.indigo,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ],
             ),
           ],
