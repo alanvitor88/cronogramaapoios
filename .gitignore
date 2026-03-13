@@ -1,0 +1,28 @@
+# Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/app/
+*.iml
+
+# Android
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+
+# iOS
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+
+# Web build NÃO ignorar (precisamos para Cloudflare)
+# build/web/ -- mantendo para deploy
+
+# Misc
+.DS_Store
+*.swp
