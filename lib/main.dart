@@ -187,7 +187,7 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
             index: _selectedIndex,
             children: _screens,
           ),
-          // Loading overlay inicial
+          // Loading overlay inicial (só aparece 1x ao abrir, por 5s no máximo)
           if (provider.isLoading && provider.apoios.isEmpty)
             Container(
               color: Colors.white.withValues(alpha: 0.92),
@@ -210,46 +210,29 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
                 ),
               ),
             ),
-          // Tela de erro de conexão
+          // Banner de reconexão (não bloqueia o app, fica no topo)
           if (!provider.isLoading && !provider.isOnline && provider.apoios.isEmpty)
-            Container(
-              color: Colors.white,
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(32),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.cloud_off, size: 72, color: Colors.grey[400]),
-                      const SizedBox(height: 20),
-                      const Text(
-                        'Sem conexão com a nuvem',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
+            Positioned(
+              bottom: 0, left: 0, right: 0,
+              child: Container(
+                color: Colors.orange[700],
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                child: Row(
+                  children: [
+                    const Icon(Icons.sync, color: Colors.white, size: 18),
+                    const SizedBox(width: 8),
+                    const Expanded(
+                      child: Text(
+                        'Reconectando ao servidor...',
+                        style: TextStyle(color: Colors.white, fontSize: 13),
                       ),
-                      const SizedBox(height: 10),
-                      Text(
-                        provider.erro ?? 'Verifique sua conexão com a internet e tente novamente.',
-                        style: TextStyle(fontSize: 13, color: Colors.grey[600]),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Servidor: gbmlhxlfbpebgufatnyq.supabase.co',
-                        style: TextStyle(fontSize: 11, color: Colors.grey[400]),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 28),
-                      ElevatedButton.icon(
-                        onPressed: () => provider.recarregar(),
-                        icon: const Icon(Icons.refresh),
-                        label: const Text('Tentar novamente'),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                    TextButton(
+                      onPressed: () => provider.recarregar(),
+                      child: const Text('Tentar agora',
+                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                    ),
+                  ],
                 ),
               ),
             ),

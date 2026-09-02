@@ -32,9 +32,28 @@ class ApoioProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     await _carregarTodos();
-    if (_isOnline) _assinarRealtime();
+    if (_isOnline) {
+      _assinarRealtime();
+    } else {
+      // Retry em background sem bloquear o app
+      _iniciarRetryAutomatico();
+    }
     _isLoading = false;
     notifyListeners();
+  }
+
+  // Tenta reconectar em background a cada 10s, até 10 vezes
+  Future<void> _iniciarRetryAutomatico() async {
+    for (int i = 0; i < 10; i++) {
+      await Future.delayed(const Duration(seconds: 10));
+      if (_isOnline) return; // Já reconectou
+      await _carregarTodos();
+      if (_isOnline) {
+        _assinarRealtime();
+        notifyListeners();
+        return;
+      }
+    }
   }
 
   // ─────────────────────────────────────────────
@@ -47,7 +66,7 @@ class ApoioProvider extends ChangeNotifier {
           .from('apoios')
           .select('*')
           .order('data_hora', ascending: false)
-          .timeout(const Duration(seconds: 15));
+          .timeout(const Duration(seconds: 8));
 
       _apoios = (response as List)
           .map((row) => Apoio.fromSupabase(Map<String, dynamic>.from(row)))
@@ -75,7 +94,6 @@ class ApoioProvider extends ChangeNotifier {
     _erro = null;
     notifyListeners();
     await _carregarTodos();
-    // Se conectou, assinar realtime se ainda não estiver
     if (_isOnline && _channel == null) {
       _assinarRealtime();
     }
